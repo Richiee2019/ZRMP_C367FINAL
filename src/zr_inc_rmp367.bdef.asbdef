@@ -1,0 +1,126 @@
+managed implementation in class zbp_r_inc_rmp367 unique;
+strict ( 2 );
+
+with draft;
+
+define behavior for ZR_INC_RMP367 alias Incidente
+persistent table zbdt_inc_rmp367
+draft table zbdt_incd_rmp367
+
+lock master total etag LastChangedAt
+etag master LocalLastChangedAt
+authorization master ( global, instance )
+
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  association _Historial { create ( features : instance ); with draft; }
+
+  field ( numbering : managed, readonly ) IncUuid;
+
+  field ( readonly )
+  incidentid,
+  LocalCreatedBy,
+  LocalCreatedAt,
+  LocalLastChangedBy,
+  LocalLastChangedAt,
+  LastChangedAt;
+
+  field ( mandatory )
+  Title,
+  Description,
+  Priority;
+
+  action ( features : instance, authorization : update ) CambioStatus
+    parameter ZEA_CAM_ST_RMP367 result [1] $self;
+
+  internal action setHistory;
+
+  validation validarCamposObligatorios on save { create; update; field Title, Description, Priority, Status, CreationDate; }
+  validation validarfechas on save { create; update; field CreationDate; }
+
+  determine action validarTitle { validation validarCamposObligatorios; }
+  determine action validarDescription { validation validarCamposObligatorios; }
+  determine action validarPriority { validation validarCamposObligatorios; }
+  determine action validarStatus { validation validarCamposObligatorios; }
+  determine action validarCreationDate { validation validarCamposObligatorios; }
+
+  determination setDefaultHistory on save { create; }
+  determination setDefaultValues on modify { create; }
+
+  side effects
+  {
+    action CambioStatus affects $self;
+    determine action validarTitle executed on field Title affects messages;
+    determine action validarDescription executed on field Description affects messages;
+    determine action validarPriority executed on field Priority affects messages;
+    determine action validarStatus executed on field Status affects messages;
+    determine action validarCreationDate executed on field CreationDate affects messages;
+  }
+
+  draft action Resume;
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+
+  draft determine action Prepare;
+
+  mapping for zbdt_inc_rmp367
+    {
+      incuuid            = inc_uuid;
+      incidentid         = incident_id;
+      title              = title;
+      description        = description;
+      status             = status;
+      priority           = priority;
+      creationdate       = creation_date;
+      changeddate        = changed_date;
+      localcreatedby     = local_created_by;
+      localcreatedat     = local_created_at;
+      locallastchangedby = local_last_changed_by;
+      locallastchangedat = local_last_changed_at;
+      lastchangedat      = last_changed_at;
+    }
+
+}
+
+define behavior for ZR_INHIS_RMP367 alias Historial
+persistent table zbdt_in_h_rmp367
+draft table zbdt_ind_h_rm367
+lock dependent by _Incidente
+authorization dependent by _Incidente
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( numbering : managed ) hisuuid;
+
+  field ( readonly )
+  hisuuid,
+  incuuid,
+  localcreatedby,
+  localcreatedat,
+  locallastchangedby,
+  locallastchangedat,
+  lastchangedat;
+
+  mapping for zbdt_in_h_rmp367
+    {
+      hisuuid            = his_uuid;
+      incuuid            = inc_uuid;
+      hisid              = his_id;
+      previousstatus     = previous_status;
+      newstatus          = new_status;
+      text               = text;
+      localcreatedby     = local_created_by;
+      localcreatedat     = local_created_at;
+      locallastchangedby = local_last_changed_by;
+      locallastchangedat = local_last_changed_at;
+      lastchangedat      = last_changed_at;
+    }
+
+  association _Incidente { with draft; }
+}

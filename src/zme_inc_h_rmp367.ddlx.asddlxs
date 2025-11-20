@@ -1,0 +1,52 @@
+@Metadata.layer: #CORE
+@UI: { createHidden: true,
+       headerInfo: { typeName:       'Historial',
+                     typeNamePlural: 'Historiales',
+                     title:          { type: #STANDARD,
+                                       label: 'Historial',
+                                       value: 'HisID' } },
+       presentationVariant: [{ sortOrder: [{ by: 'NewStatus',
+                                          direction: #DESC } ],
+       visualizations: [{ type: #AS_LINEITEM}]}] }
+annotate entity ZRC_INHIS_RMP367 with
+{
+  @UI.facet: [ { id:              'Historial',
+                 purpose:         #STANDARD,
+                 type:            #IDENTIFICATION_REFERENCE,
+                 label:           'Historial de Incidente',
+                 position:        10 }  ]
+  @UI: { lineItem:       [ { position: 10,
+          importance: #HIGH } ],
+         identification: [ { position: 10 } ] }
+  @UI.hidden:true
+  HisUuid;
+  @UI: { lineItem:       [ { position: 20, importance: #HIGH} ],
+       identification: [ { position: 20 } ] }
+  @UI.hidden: true
+  IncUuid;
+  @UI: { lineItem:       [ { position: 30, importance: #HIGH, label: 'ID Historial' } ],
+       identification: [ { position: 30 } ] }
+  HisId;
+  @UI: { lineItem:       [ { position: 40, importance: #MEDIUM, label: 'Estatus Previo' } ],
+         identification: [ { position: 40 } ] }
+  PreviousStatus;
+  @UI: { lineItem:       [ { position: 50, importance: #LOW, label: 'Nuevo Estatus' } ],
+         identification: [ { position: 50 } ] }
+  NewStatus;
+  @UI: { lineItem:       [ { position: 60, importance: #LOW, label: 'Observación' } ],
+       identification: [ { position: 60 } ] }
+  Text;
+  @UI.hidden:true
+  LocalCreatedBy;
+  @UI.hidden:true
+  LocalCreatedAt;
+  @UI.hidden:true
+  LocalLastChangedBy;
+  @UI.hidden:true
+  LocalLastChangedAt;
+  @UI.hidden:true
+  LastChangedAt;
+  /* Associations */
+  @UI.hidden:true
+  _Incidente;
+}

@@ -1,0 +1,11 @@
+@EndUserText.label: 'SERV.DEFINITION: Incidente'
+@ObjectModel: {
+                leadingEntity: {
+                name: 'ZRC_INC_RMP367'
+                }
+              }
+define service ZSD_INCIDENTE_RMP367
+  provider contracts odata_v4_ui {
+  expose ZRC_INC_RMP367   as Incidente;
+  expose ZRC_INHIS_RMP367 as Historial;
+}

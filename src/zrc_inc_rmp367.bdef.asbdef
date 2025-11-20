@@ -1,0 +1,29 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZRC_INC_RMP367 alias _Incidente
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  use action CambioStatus;
+
+  use action Resume;
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Prepare;
+
+  use association _Historial { create; with draft; }
+}
+
+define behavior for ZRC_INHIS_RMP367 alias _Historial
+{
+//  use update;
+//  use delete;
+
+  use association _Incidente { with draft; }
+}

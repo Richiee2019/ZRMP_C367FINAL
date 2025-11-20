@@ -1,0 +1,128 @@
+@Metadata.layer: #CUSTOMER
+@UI: { headerInfo : {
+                      typeName: 'Incidente',
+                      typeNamePlural: 'Incidentes',
+                      title : { type: #STANDARD,
+                                value: 'IncidentId'  } },
+                      presentationVariant: [{ sortOrder: [{ by: 'IncidentId',
+                                              direction: #DESC }],
+                      visualizations: [{ type: #AS_LINEITEM }] }]
+                                 }
+annotate entity ZRC_INC_RMP367 with
+{
+  @EndUserText.label: 'IncUUID'
+  @UI.facet: [{ id: 'MasterIncidente',
+                purpose: #STANDARD,
+                type: #IDENTIFICATION_REFERENCE,
+                label: 'Incidente',
+                position: 10 },
+                {
+                id: 'Historial',
+                purpose: #STANDARD,
+                type: #LINEITEM_REFERENCE,
+                label: 'Historial',
+                position: 20,
+                targetElement: '_Historial'
+              }]
+
+  @UI: { lineItem: [{ position: 10,
+                      importance: #HIGH,
+                      label: 'Incidente ID ' },
+                      { type: #FOR_ACTION,
+                        dataAction: 'CambioStatus',
+                        label: 'Cambio Estatus',
+                        position: 10 }
+                    ]}
+  @UI.selectionField: [{ position: 10 }]
+  @UI.identification: [{ position: 10 },
+                       { type: #FOR_ACTION,
+                         dataAction: 'CambioStatus',
+                         label: 'Cambio Estatus',
+                         position: 10 }]
+
+  @UI.hidden: true
+  IncUuid;
+
+  @UI: {lineItem: [{ position: 20,
+               importance: #MEDIUM }],
+  identification: [{ position: 20,
+                     label: 'ID Incidente'  } ],
+  selectionField: [{ position: 20 }]}
+
+  IncidentId;
+
+  @UI.lineItem: [{ position: 30,
+                 importance: #MEDIUM,
+                 label: 'Titulo'  }]
+  //  @UI.selectionField: [{ position: 30 }]
+  @UI.identification: [{ position: 30,
+                         label: 'Titulo' }]
+  Title;
+
+  @UI.lineItem: [{ position: 40,
+               importance: #MEDIUM,
+               label: 'Descrip.Incidente'  }]
+  @UI.selectionField: [{ position: 40 }]
+  @UI.identification: [{ position: 40,
+                         label: 'Descrip.Incidente' }]
+  Description;
+
+  @UI.lineItem: [{ position: 50,
+               importance: #MEDIUM,
+               label: 'Estatus Incidente'  }]
+  @UI.selectionField: [{ position: 50 }]
+  @UI.identification: [{ position: 50,
+                         label: 'Estatus Incidente' }]
+
+  @Consumption.valueHelpDefinition: [ {
+      entity.name: 'ZVH_STAT_RMP637',
+      entity.element: 'StatusCode',
+      useForValidation: true
+    } ]
+  Status;
+
+  @UI.lineItem: [{ position: 60,
+               importance: #MEDIUM,
+               label: 'Prioridad Incidente'  }]
+  @UI.selectionField: [{ position: 60 }]
+  @UI.identification: [{ position: 60,
+                         label: 'Prioridad Incidente' }]
+
+  @Consumption.valueHelpDefinition: [ {
+      entity.name: 'ZVH_PRI_RMP637',
+      entity.element: 'PriorityCode',
+      useForValidation: true
+    } ]
+  Priority;
+
+  @UI.lineItem: [{ position: 70,
+             importance: #LOW,
+             label: 'Fec.Creación'  }]
+  @UI.selectionField: [{ position: 70 }]
+  @UI.identification: [{ position: 70,
+                         label: 'Fec.Creación' }]
+
+  CreationDate;
+
+  @UI.lineItem: [{ position: 80,
+              importance: #LOW,
+              label: 'Fec.Modificación'  }]
+  @UI.selectionField: [{ position: 80 }]
+  @UI.identification: [{ position: 80,
+                         label: 'Fec.Modificación' }]
+  ChangedDate;
+  @UI.hidden: true
+  LocalCreatedBy;
+  @UI.hidden: true
+  LocalCreatedAt;
+  @UI.hidden: true
+  LocalLastChangedBy;
+  @UI.hidden: true
+  LocalLastChangedAt;
+  @UI.hidden: true
+  LastChangedAt;
+  /* Associations */
+  @UI.hidden: true
+  _Historial;
+
+}
