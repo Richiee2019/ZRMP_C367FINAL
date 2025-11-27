@@ -33,11 +33,12 @@ CLASS lhc_Incidente DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS setDefaultHistory FOR DETERMINE ON SAVE
       IMPORTING keys FOR Incidente~setDefaultHistory.
+
     METHODS validarCamposObligatorios FOR VALIDATE ON SAVE
       IMPORTING keys FOR Incidente~validarCamposObligatorios.
+
     METHODS validarfechas FOR VALIDATE ON SAVE
       IMPORTING keys FOR Incidente~validarfechas.
-
 
     METHODS get_history_index EXPORTING ev_incuuid      TYPE sysuuid_x16
                               RETURNING VALUE(rv_index) TYPE zde_id_his.
@@ -122,13 +123,31 @@ CLASS lhc_Incidente IMPLEMENTATION.
         lv_wrong_status = lv_status.
         " Mensajes de eeror personalizado
         APPEND VALUE #( %tky = <incident>-%tky
-                        %msg = NEW zcl_mensajes_incidente_rmp367( textid = zcl_mensajes_incidente_rmp367=>status_invalid
-                                                            status = lv_wrong_status
-                                                            severity = if_abap_behv_message=>severity-error )
-                        %state_area = 'VALIDATE_COMPONENT'
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>estatus_invalido
+                                                                  estatus  = lv_wrong_status
+                                                                  severity = if_abap_behv_message=>severity-error )
+
+                         %op-%action-CambioStatus = if_abap_behv=>mk-on
+
                          ) TO reported-incidente.
+
         lv_error = abap_true.
         EXIT.
+      ENDIF.
+      IF <incident>-Status EQ mc_estatus-canceled OR <incident>-Status EQ mc_estatus-closed OR
+         <incident>-Status EQ mc_estatus-completed.
+
+        APPEND VALUE #( %tky = <incident>-%tky
+                                %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>estatus_no_cambia
+                                                                          severity = if_abap_behv_message=>severity-error )
+
+                                 %op-%action-CambioStatus = if_abap_behv=>mk-on
+
+                                 ) TO reported-incidente.
+
+        lv_error = abap_true.
+        EXIT.
+
       ENDIF.
 
       APPEND VALUE #( %tky = <incident>-%tky
@@ -215,7 +234,7 @@ CLASS lhc_Incidente IMPLEMENTATION.
     DATA: lt_updated_root_entity TYPE TABLE FOR UPDATE zr_inc_rmp367,
           lt_association_entity  TYPE TABLE FOR CREATE zr_inc_rmp367\_Historial,
           lv_exception           TYPE string,
-          ls_incident_history    TYPE zdt_inct_h_lgl,
+          ls_incident_history    TYPE zbdt_in_h_rmp367,
           lv_max_his_id          TYPE zde_his_id_lgl.
 
 
@@ -330,11 +349,116 @@ CLASS lhc_Incidente IMPLEMENTATION.
 
   METHOD validarCamposObligatorios.
 
+    READ ENTITIES OF zr_inc_rmp367 IN LOCAL MODE
+         ENTITY Incidente
+         ALL FIELDS WITH CORRESPONDING #( keys )
+         RESULT DATA(incidentes).
 
+    LOOP AT incidentes ASSIGNING FIELD-SYMBOL(<incident>).
 
+      IF <incident>-Title IS INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>titulo_vacio
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-title = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+
+      ENDIF.
+
+      IF <incident>-Description IS INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>descrip_vacio
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-Description = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+
+      ENDIF.
+      IF <incident>-Priority IS INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>prio_vacio
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-Priority = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+
+      ENDIF.
+      IF <incident>-Status IS INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>estatus_vacio
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-Status = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+
+      ENDIF.
+      IF <incident>-CreationDate IS INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>fec_cre_vacio
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-CreationDate = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD validarfechas.
+    READ ENTITIES OF zr_inc_rmp367 IN LOCAL MODE
+       ENTITY Incidente
+       FIELDS (
+             CreationDate
+             ChangedDate
+              )
+       WITH  CORRESPONDING #( keys )
+       RESULT DATA(incidentes).
+
+    LOOP AT incidentes ASSIGNING FIELD-SYMBOL(<incident>).
+
+      IF <incident>-ChangedDate IS INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid      = zcl_mensajes_incidente_rmp367=>fec_cambio_vacio
+                                                                  change_date = <incident>-ChangedDate
+                                                                  severity    = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-ChangedDate = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+      ENDIF.
+
+      IF <incident>-ChangedDate < <incident>-CreationDate AND <incident>-CreationDate IS NOT INITIAL
+                                                          AND <incident>-ChangedDate IS NOT INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>fec_cambio_menor_crea
+                                                                  change_date = <incident>-ChangedDate
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-ChangedDate = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+      ENDIF.
+
+      IF <incident>-CreationDate > cl_abap_context_info=>get_system_date( ) AND  <incident>-CreationDate IS NOT INITIAL.
+        APPEND VALUE #( %tky = <incident>-%tky ) TO failed-incidente.
+        APPEND VALUE #( %tky = <incident>-%tky
+                        %msg = NEW zcl_mensajes_incidente_rmp367( textid   = zcl_mensajes_incidente_rmp367=>fec_crea_fut
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                )
+                       %element-CreationDate = if_abap_behv=>mk-on
+                      ) TO reported-incidente.
+      ENDIF.
+
+
+
+    ENDLOOP..
+
   ENDMETHOD.
 
 ENDCLASS.

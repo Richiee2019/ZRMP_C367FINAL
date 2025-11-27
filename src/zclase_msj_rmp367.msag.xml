@@ -11,8 +11,56 @@
     <T100>
      <SPRSL>E</SPRSL>
      <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
-     <MSGNR>005</MSGNR>
+     <MSGNR>001</MSGNR>
      <TEXT>Estatus &amp;1 no valido, estatus pendiente no puede ser cambiado a CO ó CL</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>No puede estar vacio el Titulo</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>No puede estar vacio la  Descripción</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>No puede estar vacio la  Prioridad</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>No puede estar vacio la  Estatus</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>No puede estar vacio la  Fecha de modificación</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Fecha de Cambio &amp;1 no puede ser menor a la fecha de creacion</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>No se puede crear un incidente con fecha futura</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCLASE_MSJ_RMP367</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT> Estatus Canceled (CN), Completed (CO) o Closed (CL)), no hay cambio</TEXT>
     </T100>
    </T100>
   </asx:values>

@@ -11,21 +11,21 @@ ENDCLASS.
 
 
 
-CLASS ZCL_DATA_INICIAL_RMP367 IMPLEMENTATION.
+CLASS zcl_data_inicial_rmp367 IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
-    DATA: lt_in TYPE TABLE OF zdt_inct_rmpc367.
-    DATA: ls_in TYPE zdt_inct_rmpc367.
-    DATA: lt_inh TYPE TABLE OF zdt_inct_h_rc367.
-    DATA: lt_inp TYPE TABLE OF zdt_prioty_rc367.
-    DATA: lt_ins TYPE TABLE OF zdt_status_rc367.
+    DATA: lt_in TYPE TABLE OF zbdt_inc_rmp367.
+    DATA: ls_in TYPE zbdt_inc_rmp367.
+    DATA: lt_inh TYPE TABLE OF zbdt_in_h_rmp367.
+    DATA: lt_inp TYPE TABLE OF zbdt_pri_rmp367.
+    DATA: lt_ins TYPE TABLE OF zbdt_est_rmp367.
 
 
-    DELETE FROM zdt_inct_rmpc367.
-    DELETE FROM zdt_inct_h_rc367.
-    DELETE FROM zdt_prioty_rc367.
-    DELETE FROM zdt_status_rc367.
+    DELETE FROM zbdt_inc_rmp367.
+    DELETE FROM zbdt_in_h_rmp367.
+    DELETE FROM zbdt_pri_rmp367.
+    DELETE FROM zbdt_est_rmp367.
 
     DATA(lv_uuid) = cl_system_uuid=>create_uuid_x16_static( ).
 
